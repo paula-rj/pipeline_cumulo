@@ -5,7 +5,7 @@ import datetime
 """Este codigo genera un json con lista de
 keys: YYYYddd
 url: full url para descargar de cumulo 
-      LAS CARPETAS DE CADA DIA
+    las carpetas de cada dia
 """
 
 def url_parser(dtime):
@@ -24,9 +24,9 @@ def url_parser(dtime):
     """
  
     date_directory = dtime.strftime("%Y/%m/%j")
-    cumulo_dir = f"CUMULO/{date_directory}/daylight"
+    cumulo_dir = f"{date_directory}/daylight"
     key_name = dtime.strftime("%Y%j")
-    full_dir = f"https://www.dropbox.com/sh/i3s9q2v2jjyk2it/AACQ1-eFbBvdwX6jBXzEAkXba/2{cumulo_dir}?dl=0&subfolder_nav_tracking=1"
+    full_dir = f"https://www.dropbox.com/sh/i3s9q2v2jjyk2it/AACQ1-eFbBvdwX6jBXzEAkXba/{cumulo_dir}?dl=0&subfolder_nav_tracking=1"
     return ((key_name, full_dir),)
 
 

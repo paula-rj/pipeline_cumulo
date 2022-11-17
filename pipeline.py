@@ -1,24 +1,46 @@
 import json
 import os
 from zipfile import ZipFile
+from io import BytesIO
+import pathlib
 
 # import bonobo
 import dateutil.parser
 
 # import h5py
+from diskcache import Cache
+from diskcache.core import ENOVAL
 import netCDF4 as nc
 import numpy as np
 import sh
 import ipdb
 
+CACHE_PATH = pathlib.Path(
+    os.path.expanduser(os.path.join("~", "data/cache"))
+)
+
+CACHE_PATH = pathlib.Path(
+    os.path.expanduser(os.path.join("~", "data/cache"))
+)
+
 # for i in list json
-with open("urls.json") as json_file:
+with open("data.json") as json_file:
     json_load = json.load(json_file)
 
 # downloads the product
 def product_parser(date_key="2016001"):
     dropbox_dir = json_load[date_key]
     sh.wget(dropbox_dir, "-O", f"/data/{date_key}.zip")
+
+
+#Cachea files
+cache = Cache(directory="/home/paula/proyectos/cumulo_pipeline/cumulo_pp/pipeline_cumulo/data/cache")
+#cache.set('key', BytesIO(b'value'), expire=None, read=True)
+result = cache.get("/data/2016001.zip", default = ENOVAL, retry=True)
+
+if result is ENOVAL:
+    result = product_parser() #esto 
+
 
 
 # for...itera sobre todos los files
