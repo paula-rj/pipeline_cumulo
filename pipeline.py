@@ -15,26 +15,25 @@ import numpy as np
 import sh
 import ipdb
 
-CACHE_PATH = pathlib.Path(
-    os.path.expanduser(os.path.join("~", "data/cache"))
-)
+PATH = pathlib.Path(os.path.abspath(os.path.dirname(__file__)))
 
-CACHE_PATH = pathlib.Path(
-    os.path.expanduser(os.path.join("~", "data/cache"))
-)
+CACHE_PATH = PATH/ "data/cache" 
+
 
 # for i in list json
-with open("data.json") as json_file:
+with open("urls.json") as json_file:
     json_load = json.load(json_file)
 
 # downloads the product
+#Cachea files
+cache = Cache(directory="CACHE_PATH")
+
+@cache.memoize(typed=True, expire=None, tag='fib')
 def product_parser(date_key="2016001"):
     dropbox_dir = json_load[date_key]
-    sh.wget(dropbox_dir, "-O", f"/data/{date_key}.zip")
+    sh.wget("-O", f"data/{date_key}.zip", dropbox_dir)
 
 
-#Cachea files
-cache = Cache(directory="/home/paula/proyectos/cumulo_pipeline/cumulo_pp/pipeline_cumulo/data/cache")
 #cache.set('key', BytesIO(b'value'), expire=None, read=True)
 result = cache.get("/data/2016001.zip", default = ENOVAL, retry=True)
 
@@ -42,10 +41,9 @@ if result is ENOVAL:
     result = product_parser() #esto 
 
 
-
 # for...itera sobre todos los files
 # extracts files from zip and opens as netcdf
-def zip_to_nc(zip_file, nc_file_name="A2016.001.2330.nc"):
+def zip_to_nc(nc_file_name = "A2016.001.1505.nc"):
     with ZipFile("/data/2016001.zip", "r") as zip:
         data = zip.read(nc_file_name)
         ds = nc.Dataset(nc_file_name, mode="r", memory=data)
@@ -74,3 +72,5 @@ def extract_bands(ncvar):
         norm_bands = (all_bands[:, :, i] - all_bands[:, :, i].min()) / (
             all_bands[:, :, i].max() - all_bands[:, :, i].min()
         )
+
+        return norm_bands
