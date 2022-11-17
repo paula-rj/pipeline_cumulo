@@ -9,22 +9,22 @@ import dateutil.parser
 import netCDF4 as nc
 import numpy as np
 import sh
-
+import ipdb
 
 # for i in list json
-with open("data.json") as json_file:
+with open("urls.json") as json_file:
     json_load = json.load(json_file)
 
-# downloadds the product
-def product_parser(date_key="2008001"):
+# downloads the product
+def product_parser(date_key="2016001"):
     dropbox_dir = json_load[date_key]
-    sh.wget(dropbox_dir, O=f"/data/{date_key}.zip")
+    sh.wget(dropbox_dir, "-O", f"/data/{date_key}.zip")
 
 
 # for...itera sobre todos los files
 # extracts files from zip and opens as netcdf
 def zip_to_nc(zip_file, nc_file_name="A2016.001.2330.nc"):
-    with ZipFile("daylight?dl=0&subfolder_nav_tracking=1.zip", "r") as zip:
+    with ZipFile("/data/2016001.zip", "r") as zip:
         data = zip.read(nc_file_name)
         ds = nc.Dataset(nc_file_name, mode="r", memory=data)
         return ds
