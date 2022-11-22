@@ -1,22 +1,43 @@
 import json
 import os
 from zipfile import ZipFile
+from io import BytesIO
+import pathlib
 
 import dateutil.parser
-import h5py
+
+# import h5py
+from diskcache import Cache
+from diskcache.core import ENOVAL
 import netCDF4 as nc
 import numpy as np
 import sh
+import ipdb
+
+PATH = pathlib.Path(os.path.abspath(os.path.dirname(__file__)))
+
+CACHE_PATH = PATH/ "data/cache" 
 
 
 # for i in list json
-with open("data.json") as json_file:
+with open("urls.json") as json_file:
     json_load = json.load(json_file)
 
-# downloads the product directory
-def product_parser(date_key="2008001"):
+# downloads the product
+#Cachea files
+cache = Cache(directory="CACHE_PATH")
+
+@cache.memoize(typed=True, expire=None, tag='fib')
+def product_parser(date_key="2016001"):
     dropbox_dir = json_load[date_key]
-    sh.wget(dropbox_dir, -O, f"/data/{date_key}.zip")
+    sh.wget("-O", f"data/{date_key}.zip", dropbox_dir)
+
+
+#cache.set('key', BytesIO(b'value'), expire=None, read=True)
+result = cache.get("/data/2016001.zip", default = ENOVAL, retry=True)
+
+if result is ENOVAL:
+    result = product_parser() #esto 
 
 
 # for...itera sobre todos los files
