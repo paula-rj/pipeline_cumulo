@@ -16,7 +16,7 @@ import ipdb
 
 PATH = pathlib.Path(os.path.abspath(os.path.dirname(__file__)))
 
-CACHE_PATH = PATH/ "data/cache" 
+CACHE_PATH = PATH / "data/cache"
 
 
 # for i in list json
@@ -24,20 +24,21 @@ with open("urls.json") as json_file:
     json_load = json.load(json_file)
 
 # downloads the product
-#Cachea files
+# Cachea files
 cache = Cache(directory="CACHE_PATH")
 
-@cache.memoize(typed=True, expire=None, tag='fib')
+
+@cache.memoize(typed=True, expire=None, tag="fib")
 def product_parser(date_key="2016001"):
     dropbox_dir = json_load[date_key]
     sh.wget("-O", f"data/{date_key}.zip", dropbox_dir)
 
 
-#cache.set('key', BytesIO(b'value'), expire=None, read=True)
-result = cache.get("/data/2016001.zip", default = ENOVAL, retry=True)
+# cache.set('key', BytesIO(b'value'), expire=None, read=True)
+result = cache.get("/data/2016001.zip", default=ENOVAL, retry=True)
 
 if result is ENOVAL:
-    result = product_parser() #esto 
+    result = product_parser()  # esto
 
 
 # for...itera sobre todos los files
@@ -86,20 +87,22 @@ def processing(nc_file):
 
 
 def generate_tiles(bands_matrix):
-    tiles_list = []
+    h_tiles_list = []
     pixel_list_height = np.arange(0, 1354, 128)
     pixel_list_lenght = np.arange(0, 2030, 128)
-    lcycle = iter(pixel_list_height)
-    for i in pixel_list_height:
-        if i == 0:
-            nex = next(lcycle)
-            htile = bands_matrix[i : next(lcycle), :, :]
-        elif i == 1280:
-            break
-        else:
-            htile = bands_matrix[i : next(lcycle), :, :]
+    conth = 0
+    while conth + 1 <= len(pixel_list_height):
+        height_tile = bands_matrix[
+            pixel_list_height[conth] : pixel_list_height[conth + 1], :, :
+        ]
+        conth = conth + 1
+        h_tiles_list.append(height_tile)
+    return h_tiles_list
 
-    return htile
+    # contl = 0
+    # while contl+1<=len(pixel_list_lenght):
+    #    lenght_tile = bands_matrix[:, pixel_list_lenght[contl]:pixel_list_lenght[contl+1], :]
+    #    contl = contl + 1
 
     # with h5py.File("mytestfile.hdf5", "w") as f:
     #    dset = f.create_dataset("dataset_1", data = norm_bands)

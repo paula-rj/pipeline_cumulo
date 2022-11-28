@@ -1,7 +1,7 @@
 # main
-#for i in json_list: ...
+# for i in json_list: ...
 
-#Cache
+# Cache
 from io import BytesIO
 import os
 import pathlib
@@ -9,29 +9,29 @@ import pathlib
 from diskcache import Cache
 from diskcache.core import ENOVAL
 
-CACHE_PATH = pathlib.Path(
-    os.path.expanduser(os.path.join("~", "cache"))
-)
+CACHE_PATH = pathlib.Path(os.path.expanduser(os.path.join("~", "cache")))
 
 cache = Cache()
-cache.set('key', BytesIO(b'value'), expire=None, read=True)
-
+cache.set("key", BytesIO(b"value"), expire=None, read=True)
 
 
 import diskcache
 
-from diskcache import FanoutCache, Cache, JSONDisk,core
+from diskcache import FanoutCache, Cache, JSONDisk, core
 
 cache = Cache(directory="cache")
+
 
 def download_data(a):
     ...
     return
 
-@cache.memoize(typed=True, expire=None, tag='fib')
+
+@cache.memoize(typed=True, expire=None, tag="fib")
 def load_image(a, k=1):
     data = download_data(a)
-    return str(a)  + "hola"
+    return str(a) + "hola"
+
 
 cache.directory
 

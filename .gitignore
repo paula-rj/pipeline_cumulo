@@ -12,6 +12,7 @@ build/
 develop-eggs/
 dist/
 downloads/
+
 eggs/
 .eggs/
 lib/
@@ -120,3 +121,4 @@ python.md
 maquinas_virtuales.md
 satpytry.py
 daylight?dl=0&subfolder_nav_tracking=1.zip
+data/2016001.zip
