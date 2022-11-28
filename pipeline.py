@@ -1,50 +1,37 @@
 import json
 import os
-from zipfile import ZipFile
-from io import BytesIO
 import pathlib
+from zipfile import ZipFile
 
-import dateutil.parser
-
-# import h5py
-from diskcache import Cache
-from diskcache.core import ENOVAL
+import h5py
 import netCDF4 as nc
 import numpy as np
 import sh
-import ipdb
 
 PATH = pathlib.Path(os.path.abspath(os.path.dirname(__file__)))
 
 CACHE_PATH = PATH / "data/cache"
-
+#cache = Cache(directory="CACHE_PATH")
 
 # for i in list json
 with open("urls.json") as json_file:
     json_load = json.load(json_file)
 
-# downloads the product
-# Cachea files
-cache = Cache(directory="CACHE_PATH")
-
-
-@cache.memoize(typed=True, expire=None, tag="fib")
+#@cache.memoize(typed=True, expire=None, tag="fib")
 def product_parser(date_key="2016001"):
     dropbox_dir = json_load[date_key]
     sh.wget("-O", f"data/{date_key}.zip", dropbox_dir)
 
 
 # cache.set('key', BytesIO(b'value'), expire=None, read=True)
-result = cache.get("/data/2016001.zip", default=ENOVAL, retry=True)
+#result = cache.get("/data/2016001.zip", default=ENOVAL, retry=True)
 
-if result is ENOVAL:
-    result = product_parser()  # esto
+#if result is ENOVAL:
+#    result = product_parser()  # esto
 
-
-# for...itera sobre todos los files
 # extracts files from zip and opens as netcdf
 def zip_to_nc(
-    zip_file="daylight?dl=0&subfolder_nav_tracking=1.zip",
+    zip_file="data/2016001.zip",
     nc_file_name="A2016.001.2330.nc",
 ):
     with ZipFile(zip_file, "r") as zip:
@@ -55,7 +42,17 @@ def zip_to_nc(
 
 def processing(nc_file):
     """Extracts bands form netcdf
-    and get them ready"""
+    and get them ready
+    
+    Parameters:
+    -----------
+    nc_file: netCDF file from CUMULO datasets
+    
+    Returns:
+    --------
+    norm_bands: np array
+    6 bands normilized in a 1354x2030x6 array"""
+    
     band_dict = {
         "b1": "ev_250_aggr1km_refsb_1",  # vis
         "b2": "ev_250_aggr1km_refsb_2",  # vis
@@ -89,20 +86,26 @@ def processing(nc_file):
 def generate_tiles(bands_matrix):
     h_tiles_list = []
     pixel_list_height = np.arange(0, 1354, 128)
-    pixel_list_lenght = np.arange(0, 2030, 128)
     conth = 0
-    while conth + 1 <= len(pixel_list_height):
+    while conth + 1 < len(pixel_list_height):
         height_tile = bands_matrix[
             pixel_list_height[conth] : pixel_list_height[conth + 1], :, :
         ]
         conth = conth + 1
         h_tiles_list.append(height_tile)
-    return h_tiles_list
-
-    # contl = 0
-    # while contl+1<=len(pixel_list_lenght):
-    #    lenght_tile = bands_matrix[:, pixel_list_lenght[contl]:pixel_list_lenght[contl+1], :]
-    #    contl = contl + 1
-
-    # with h5py.File("mytestfile.hdf5", "w") as f:
-    #    dset = f.create_dataset("dataset_1", data = norm_bands)
+        
+    l_tiles_list = []
+    pixel_list_lenght = np.arange(0, 2030, 128)
+    conth=0
+    for height_tile in h_tiles_list:
+        contl = 0
+        while  contl  +1 < len(pixel_list_lenght):
+            lenght_tile = height_tile[:,pixel_list_lenght[contl] : pixel_list_lenght[contl + 1], :]
+            contl = contl + 1
+            l_tiles_list.append(lenght_tile)
+            
+            with h5py.File(f"data/2016001/tile{conth}{contl}.hdf5", "w") as f:
+                f.create_dataset("bands", data = lenght_tile )
+        conth=conth+1
+        
+    return l_tiles_list
