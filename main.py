@@ -53,7 +53,7 @@ def product_parser(key_num=KEYN):
     la idea es iterar sobre esa lista
     """
     date_key = js_keys[key_num]
-    dropbox_dir = json_load[date_key]
+    dropbox_dir = "https://www.dropbox.com/sh/i3s9q2v2jjyk2it/AACQ1-eFbBvdwX6jBXzEAkXba/2016/01/001/daylight?dl=1"  # json_load[date_key]
     sh.wget("-O", f"data/{date_key}.zip", dropbox_dir)
 
 

@@ -1,5 +1,5 @@
 import numpy as np
-import json 
+import json
 import datetime
 
 """Este codigo genera un json con lista de
@@ -7,6 +7,7 @@ keys: YYYYddd
 url: full url para descargar de cumulo 
     las carpetas de cada dia
 """
+
 
 def url_parser(dtime):
     """Builds the url.
@@ -22,22 +23,22 @@ def url_parser(dtime):
     key_name: yyyyddd carpeta donde se van a guardar los archivos
     full dir
     """
- 
+
     date_directory = dtime.strftime("%Y/%m/%j")
     cumulo_dir = f"{date_directory}/daylight"
     key_name = dtime.strftime("%Y%j")
-    full_dir = f"https://www.dropbox.com/sh/i3s9q2v2jjyk2it/AACQ1-eFbBvdwX6jBXzEAkXba/{cumulo_dir}?dl=0&subfolder_nav_tracking=1"
+    full_dir = f"https://www.dropbox.com/sh/i3s9q2v2jjyk2it/AACQ1-eFbBvdwX6jBXzEAkXba/{cumulo_dir}?dl=1"
     return ((key_name, full_dir),)
 
 
 url_dict = {}
 years_avail = (2016,)
-days = np.arange(1,366).tolist()
+days = np.arange(1, 366).tolist()
 for year in years_avail:
-  for day in days:
-    dt = datetime.datetime.strptime(f"{year} {day}", "%Y %j")
-    url_dict.update((url_parser(dt)))
+    for day in days:
+        dt = datetime.datetime.strptime(f"{year} {day}", "%Y %j")
+        url_dict.update((url_parser(dt)))
 
 
-with open('urls.json', 'w') as fp:
+with open("urls.json", "w") as fp:
     json.dump(url_dict, fp, indent=2)
