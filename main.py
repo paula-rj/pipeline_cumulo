@@ -61,13 +61,12 @@ result = cache.get(f"data/{js_keys[KEYN]}.zip", default=ENOVAL, retry=True)
 if result is ENOVAL:
     result = product_parser()  # esto
 
-
-#%%
-# for ... que extraiga cada archivo del zip
-nc_file = pipeline.zip_to_nc()  # dir_name, file_name
+# for file in zip: ... que extraiga cada archivo del zip
+# name = file.name
+nc_file = pipeline.zip_to_nc(nc_file_name="A2016.001.0200.nc")
 norm_bands = pipeline.processing(nc_file)
 a = pipeline.generate_tiles(
     norm_bands
 )  # -> estos son h5 que se guarda en la memoria o ftp
-# delate nc_file from local ?
-# plt.imshow(a[45][:,:,-3:])
+
+# sh.rm(f"data/{js_keys[KEYN]}.zip")
