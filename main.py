@@ -6,7 +6,6 @@ import pathlib
 from diskcache import Cache
 from diskcache.core import ENOVAL
 import sh
-import matplotlib.pyplot as plt
 
 import pipeline
 
