@@ -1,3 +1,4 @@
+#%%
 import numpy as np
 import h5py
 import matplotlib.pyplot as plt
@@ -18,11 +19,15 @@ a = pipeline.generate_tiles(
 # plt.imshow(a[45][:,:,-3:])
 
 #%%
-f = h5py.File("data/2016001/tile011.hdf5", "r")
-a = f["bands"]
-for i in range(6):
-    plt.imshow(a[:, :, i], cmap="gray")
-    plt.show()
+f = h5py.File("data/2016001/tile69.hdf5", "r")
+a = f["bands"][:]
+plt.imshow(a[:, :, 2 ], cmap="gray")
+plt.show()
+#for i in range(6):
+#    plt.imshow(a[:, :, i], cmap="gray")
+#    plt.show()
+
+
 # %%
 print(a[:, :, 1])
 # %%

@@ -54,7 +54,7 @@ def processing(ds_ncfile):
     # ds = nc.Dataset(nc_file)  si viene del zip esto no es necesario
     for key in band_dict:
         band = ds_ncfile.variables[band_dict.get(key)][:].data
-        band_ok = band.reshape([1354, 2030])
+        band_ok = band.reshape((1354, 2030))
         list_bands.append(band_ok)
 
     all_bands = np.stack(list_bands, -1)
