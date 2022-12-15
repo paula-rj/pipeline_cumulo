@@ -7,8 +7,8 @@ import numpy as np
 
 # extracts files from zip and opens as netcdf
 def zip_to_nc(
+    nc_file_name,
     zip_file="data/2016001.zip",
-    nc_file_name="A2016.001.2330.nc",
 ):
     """Extracts one file from zip
     Parameters:
@@ -61,9 +61,11 @@ def processing(ds_ncfile):
     list_norm_bands = []
 
     for i in range(6):
-        norm_band = (all_bands[:, :, i] - all_bands[:, :, i].min()) / (
-            all_bands[:, :, i].max() - all_bands[:, :, i].min()
-        )
+        norm_band = (
+            (all_bands[:, :, i] - all_bands[:, :, i].min())
+            / (all_bands[:, :, i].max() - all_bands[:, :, i].min())
+            * 255
+        ).astype("uint8")
         list_norm_bands.append(norm_band)
 
     norm_bands = np.stack(list_norm_bands, -1)
