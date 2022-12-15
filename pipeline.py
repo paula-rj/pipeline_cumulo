@@ -73,7 +73,7 @@ def processing(ds_ncfile):
     return norm_bands
 
 
-def generate_tiles(bands_matrix):
+def generate_tiles(bands_matrix, file_name):
     h_tiles_list = []
     pixel_list_height = np.arange(0, 1354, 128)
     conth = 0
@@ -96,7 +96,9 @@ def generate_tiles(bands_matrix):
             contl = contl + 1
             l_tiles_list.append(lenght_tile)
 
-            with h5py.File(f"data/2016001/tile{conth}{contl}.hdf5", "w") as f:
+            with h5py.File(
+                f"data/2016001/{file_name[1:14]}_tile{conth}{contl}.hdf5", "w"
+            ) as f:
                 f.create_dataset("bands", data=lenght_tile)
         conth = conth + 1
 
