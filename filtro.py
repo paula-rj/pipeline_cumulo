@@ -5,7 +5,7 @@ import netCDF4 as nc
 import numpy as np
 import scipy
 
-#%%%%%%%%%%%%%%%
+#%%%%%%%%%%%%%%%%%%%%
 # Abrimos banda visible 1
 data = nc.Dataset("data/A001.nc")
 band = data.variables["ev_250_aggr1km_refsb_1"][:]
