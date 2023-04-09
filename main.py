@@ -1,3 +1,6 @@
+# ------------------
+# IMPORTS
+# ------------------
 from io import BytesIO
 import os
 import json
