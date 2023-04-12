@@ -1,44 +1,44 @@
-import numpy as np
-import json
-import datetime
+from bs4 import BeautifulSoup
 
-"""Este codigo genera un json con lista de
-keys: YYYYddd
+"""Este codigo genera una lista de links
+para descargar cada archivo de cumulo.
 url: full url para descargar de cumulo 
-    las carpetas de cada dia
 """
 
 
-def url_parser(dtime):
+def url_parser(path_to_html):
     """Builds the url.
     Parameters
     ----------
-    year: int
-    month: int
-    day: int
+    path_to_html: str or Path
+        The path to the parsed html file
 
     Returns
     -------
-    tuple
-    key_name: yyyyddd carpeta donde se van a guardar los archivos
-    full dir
+    links_download: list
+        Lista de str, cada uno es el link para descargar.
     """
+    with open(path_to_html) as file:
+        soup = BeautifulSoup(file, "html.parser")
+    # Busca todos los links en el archivo html
+    links = [link.get("href") for link in soup.find_all("a")]
 
-    date_directory = dtime.strftime("%Y/%m/%j")
-    cumulo_dir = f"{date_directory}/daylight"
-    key_name = dtime.strftime("%Y%j")
-    full_dir = f"https://www.dropbox.com/sh/i3s9q2v2jjyk2it/AACQ1-eFbBvdwX6jBXzEAkXba/{cumulo_dir}?dl=1"
-    return ((key_name, full_dir),)
+    # Saca los 3 primeros porque no son archivos
+    links_ok = links[:-3]
 
+    # Cambia 0 por 1 para poder descargar (dl debe ser =1)
+    links_download = [link[:-1] + "1" for link in links_ok]
 
-url_dict = {}
-years_avail = (2016,)
-days = np.arange(1, 366).tolist()
-for year in years_avail:
-    for day in days:
-        dt = datetime.datetime.strptime(f"{year} {day}", "%Y %j")
-        url_dict.update((url_parser(dt)))
+    # return ((key_name, full_dir),)
+    return links_download
 
 
-with open("urls.json", "w") as fp:
-    json.dump(url_dict, fp, indent=2)
+# url_dict = {}
+# years_avail = (2016,)
+# days = np.arange(1, 366).tolist()
+# for year in years_avail:
+#    for day in days:
+#        dt = datetime.datetime.strptime(f"{year} {day}", "%Y %j")
+#        url_dict.update((url_parser(dt)))
+# with open("urls.json", "w") as fp:
+#    json.dump(url_dict, fp, indent=2)

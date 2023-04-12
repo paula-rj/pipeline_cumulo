@@ -1,8 +1,40 @@
+# ---------------------
+# IMPORTS
+# ---------------------
 from zipfile import ZipFile
 
+from bs4 import BeautifulSoup
 import h5py
 import netCDF4 as nc
 import numpy as np
+
+
+# Lista de links para cada dia
+def url_parser(path_to_html):
+    """Builds the url.
+    Parameters
+    ----------
+    path_to_html: str or Path
+        The path to the parsed html file
+
+    Returns
+    -------
+    links_download: list
+        Lista de str, cada uno es el link para descargar.
+    """
+    with open(path_to_html) as file:
+        soup = BeautifulSoup(file, "html.parser")
+    # Busca todos los links en el archivo html
+    links = [link.get("href") for link in soup.find_all("a")]
+
+    # Saca los 3 primeros porque no son archivos
+    links_ok = links[:-3]
+
+    # Cambia 0 por 1 para poder descargar (dl debe ser =1)
+    links_download = [link[:-1] + "1" for link in links_ok]
+
+    # return ((key_name, full_dir),)
+    return links_download
 
 
 # extracts files from zip and opens as netcdf
