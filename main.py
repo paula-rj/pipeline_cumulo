@@ -1,9 +1,9 @@
-# ------------------
+# --------------------
 # IMPORTS
-# ------------------
+# --------------------
+
 from io import BytesIO
 import os
-import json
 import pathlib
 
 from diskcache import Cache
@@ -12,13 +12,67 @@ import sh
 
 import pipeline
 
+# -------------------------------
+# GLOBALS
+# --------------------------------
 PATH = pathlib.Path(os.path.abspath(os.path.dirname(__file__)))
 CACHE_PATH = PATH / "data/cache"
-# CACHE_PATH = pathlib.Path(os.path.expanduser(os.path.join("~", "cache")))
-KEYN = 1
+HOME = pathlib.Path(os.path.expanduser("~"))
 
+# CACHE_PATH = pathlib.Path(os.path.expanduser(os.path.join("~", "cache")))
 cache = Cache(directory="CACHE_PATH")
 cache.set("key", BytesIO(b"value"), expire=None, read=True)
+
+# Temporary container
+# _, tmp_path = tempfile.mkstemp()
+# atexit.register(os.remove, tmp_path)
+
+
+@cache.memoize(typed=True, expire=None, tag="fib")
+def product_parser(url):
+    """
+    Parameters:
+    -----------
+    key_num: url
+        Retrieves link desde donde bajar
+    """
+    sh.wget("-O", f"pipeline_cumulo/data/{url[90:107]}", url)  # aca va tmp
+
+
+# ---------------------------------------
+# PROCESS
+# ---------------------------------------
+
+# for i in htmls dir
+path_html = "pipeline_cumulo/htmls/2009001.html"
+new_dir = path_html[22:-5]  # Guarda la parte de la fecha
+links_list = pipeline.url_parser(path_html)
+
+
+# for i in links_list[i]:
+i = 0
+link = links_list[i]
+date = link[90:104][3:].replace(".", "")
+result = cache.get(
+    f"pipeline_cumulo/data/", default=ENOVAL, retry=True
+)  # aca va tmp
+if result is ENOVAL:
+    result = product_parser(link)
+
+
+# nc_file = pipeline.zip_to_nc(nc_file_name="A2016.001.0200.nc")
+norm_bands = pipeline.processing(f"pipeline_cumulo/data/{link[90:107]}")
+
+a = pipeline.generate_tiles(
+    norm_bands, new_dir, date
+)  # -> estos son h5 que se guarda en la memoria o ftp
+
+import ipdb
+
+ipdb.set_trace()
+
+# sh.rm(f"data/{js_keys[KEYN]}.zip")
+
 
 # cache = Cache()
 # cache.set("key", BytesIO(b"value"), expire=None, read=True)
@@ -37,38 +91,3 @@ cache.set("key", BytesIO(b"value"), expire=None, read=True)
 # cache.directory
 # core.args_to_key(("load_image",), ("35",), {"k": 1}, True, set())
 # cache.expire()
-
-
-# for i in list json
-with open("urls.json") as json_file:
-    json_load = json.load(json_file)
-    js_keys = list(json_load.keys())
-
-
-@cache.memoize(typed=True, expire=None, tag="fib")
-def product_parser(key_num=KEYN):
-    """
-    Parameters:
-    -----------
-    key_num: int
-    number of key in list of  json keys
-    la idea es iterar sobre esa lista
-    """
-    date_key = js_keys[key_num]
-    dropbox_dir = "https://www.dropbox.com/sh/i3s9q2v2jjyk2it/AACQ1-eFbBvdwX6jBXzEAkXba/2016/01/001/daylight?dl=1"  # json_load[date_key]
-    sh.wget("-O", f"data/{date_key}.zip", dropbox_dir)
-
-
-result = cache.get(f"data/{js_keys[KEYN]}.zip", default=ENOVAL, retry=True)
-if result is ENOVAL:
-    result = product_parser()  # esto
-
-# for file in zip: ... que extraiga cada archivo del zip
-# name = file.name
-nc_file = pipeline.zip_to_nc(nc_file_name="A2016.001.0200.nc")
-norm_bands = pipeline.processing(nc_file)
-a = pipeline.generate_tiles(
-    norm_bands
-)  # -> estos son h5 que se guarda en la memoria o ftp
-
-# sh.rm(f"data/{js_keys[KEYN]}.zip")

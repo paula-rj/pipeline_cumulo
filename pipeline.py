@@ -11,7 +11,8 @@ import numpy as np
 
 # Lista de links para cada dia
 def url_parser(path_to_html):
-    """Builds the url.
+    """Retrieves list of urls for one day.
+
     Parameters
     ----------
     path_to_html: str or Path
@@ -28,13 +29,14 @@ def url_parser(path_to_html):
     links = [link.get("href") for link in soup.find_all("a")]
 
     # Saca los 3 primeros porque no son archivos
-    links_ok = links[:-3]
+    # y el primero que suele ser del amanecer
+    links_list_ok = links[3:]
 
     # Cambia 0 por 1 para poder descargar (dl debe ser =1)
-    links_download = [link[:-1] + "1" for link in links_ok]
+    links_to_download = [link_ok[:-1] + "1" for link_ok in links_list_ok]
 
     # return ((key_name, full_dir),)
-    return links_download
+    return links_to_download
 
 
 # extracts files from zip and opens as netcdf
@@ -42,16 +44,23 @@ def zip_to_nc(
     nc_file_name,
     zip_file="data/2016001.zip",
 ):
-    """Extracts one file from zip
+    """Extracts one file from a zip
     Parameters:
     -----------
-    zip_file: Zip file where the files are stored
-    nc_file_name: netcdf file to extract
+    zip_file: str or Path
+        Path to zip file where the files are stored
+    nc_file_name: str
+        Name of netcdf file to extract
 
     Returns:
     --------
     ds: netcdf.Dataset
-    Dataset from the extracted file
+        Dataset from the extracted file
+
+    Notes:
+    ------
+    Si no uso este porque descargo file by file
+    agregas nc.Dataset en norm_bands
     """
     with ZipFile(zip_file, "r") as zip:
         data = zip.read(nc_file_name)
@@ -60,17 +69,17 @@ def zip_to_nc(
 
 
 def processing(ds_ncfile):
-    """Extracts bands form netcdf
-    and get them ready
+    """Extracts bands form netcdf and get them ready.
+    Retrieves numpy array with 6 bands.
 
     Parameters:
     -----------
-    nc_file: netCDF file from CUMULO datasets
+        nc_file: netCDF file from CUMULO dataset
 
     Returns:
     --------
     norm_bands: np array
-    6 bands normilized in a 1354x2030x6 array"""
+        6 bands normalized in a 1354x2030x6 array"""
 
     band_dict = {
         "b1": "ev_250_aggr1km_refsb_1",  # vis
@@ -82,10 +91,10 @@ def processing(ds_ncfile):
     }
 
     list_bands = []
-    # extraact bands and get them ready
-    # ds = nc.Dataset(nc_file)  si viene del zip esto no es necesario
+    # extract bands and get them ready
+    ds = nc.Dataset(ds_ncfile)  # si viene del zip esto no es necesario
     for key in band_dict:
-        band = ds_ncfile.variables[band_dict.get(key)][:].data
+        band = ds.variables[band_dict.get(key)][:].data
         band_ok = band.reshape((1354, 2030))
         list_bands.append(band_ok)
 
@@ -105,7 +114,7 @@ def processing(ds_ncfile):
     return norm_bands
 
 
-def generate_tiles(bands_matrix, file_name):
+def generate_tiles(bands_matrix, directory, file_name):
     h_tiles_list = []
     pixel_list_height = np.arange(0, 1354, 128)
     conth = 0
@@ -128,8 +137,14 @@ def generate_tiles(bands_matrix, file_name):
             contl = contl + 1
             l_tiles_list.append(lenght_tile)
 
+            if contl < 10:
+                contl = f"0{contl}"
+            else:
+                contl = str(contl)
+
             with h5py.File(
-                f"data/2016001/{file_name[1:14]}_tile{conth}{contl}.hdf5", "w"
+                f"pipeline_cumulo/data/{file_name}_tile{conth}{contl}.hdf5",  # acca va disco
+                "w",
             ) as f:
                 f.create_dataset("bands", data=lenght_tile)
         conth = conth + 1
