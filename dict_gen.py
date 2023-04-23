@@ -1,3 +1,6 @@
+import json
+import os
+
 from bs4 import BeautifulSoup
 
 """Este codigo genera una lista de links
@@ -24,7 +27,7 @@ def url_parser(path_to_html):
     links = [link.get("href") for link in soup.find_all("a")]
 
     # Saca los 3 primeros porque no son archivos
-    links_ok = links[:-3]
+    links_ok = links[3:]
 
     # Cambia 0 por 1 para poder descargar (dl debe ser =1)
     links_download = [link[:-1] + "1" for link in links_ok]
@@ -33,12 +36,14 @@ def url_parser(path_to_html):
     return links_download
 
 
-# url_dict = {}
-# years_avail = (2016,)
-# days = np.arange(1, 366).tolist()
-# for year in years_avail:
-#    for day in days:
-#        dt = datetime.datetime.strptime(f"{year} {day}", "%Y %j")
-#        url_dict.update((url_parser(dt)))
-# with open("urls.json", "w") as fp:
-#    json.dump(url_dict, fp, indent=2)
+url_dict = {}
+route = "pipeline_cumulo/htmls/"
+html_list = sorted(os.listdir(route))
+for html_file in html_list:
+    k = html_file.rsplit(".")[0]
+    links_list = url_parser(route + html_file)
+    url_dict.update({k: links_list})
+
+# 1 json file per month
+with open("urls.json", "w") as fp:
+    json.dump(url_dict, fp, indent=2)
