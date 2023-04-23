@@ -4,8 +4,8 @@ import os
 from bs4 import BeautifulSoup
 
 """Este codigo genera una lista de links
-para descargar cada archivo de cumulo.
-url: full url para descargar de cumulo 
+para descargar cada archivo de cumulo,
+y los guarda como json, 1 file per month.
 """
 
 
@@ -45,5 +45,5 @@ for html_file in html_list:
     url_dict.update({k: links_list})
 
 # 1 json file per month
-with open("urls.json", "w") as fp:
+with open("2016_01.json", "w") as fp:
     json.dump(url_dict, fp, indent=2)
