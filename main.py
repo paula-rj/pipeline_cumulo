@@ -10,11 +10,11 @@ from diskcache import Cache
 from diskcache.core import ENOVAL
 import sh
 
-import pipeline
+from pipeline_cumulo import pipeline
 
 # -------------------------------
 # GLOBALS
-# --------------------------------
+# ------------------------------------------------------------
 PATH = pathlib.Path(os.path.abspath(os.path.dirname(__file__)))
 CACHE_PATH = PATH / "data/cache"
 HOME = pathlib.Path(os.path.expanduser("~"))
@@ -53,9 +53,7 @@ links_list = pipeline.url_parser(path_html)
 i = 0
 link = links_list[i]
 date = link[90:104][3:].replace(".", "")
-result = cache.get(
-    f"pipeline_cumulo/data/", default=ENOVAL, retry=True
-)  # aca va tmp
+result = cache.get(f"pipeline_cumulo/data/", default=ENOVAL, retry=True)  # aca va tmp
 if result is ENOVAL:
     result = product_parser(link)
 
@@ -67,9 +65,6 @@ a = pipeline.generate_tiles(
     norm_bands, new_dir, date
 )  # -> estos son h5 que se guarda en la memoria o ftp
 
-import ipdb
-
-ipdb.set_trace()
 
 # sh.rm(f"data/{js_keys[KEYN]}.zip")
 
