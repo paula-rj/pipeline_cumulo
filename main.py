@@ -2,17 +2,20 @@
 # IMPORTS
 # --------------------
 
+import atexit
 from io import BytesIO
+import json
 import os
 import pathlib
+import tempfile
 
 from diskcache import Cache
 from diskcache.core import ENOVAL
 import sh
 
-from pipeline_cumulo import pipeline
+import pipeline
 
-# -------------------------------
+# ------------------------------------------------------------
 # GLOBALS
 # ------------------------------------------------------------
 PATH = pathlib.Path(os.path.abspath(os.path.dirname(__file__)))
@@ -23,52 +26,57 @@ HOME = pathlib.Path(os.path.expanduser("~"))
 cache = Cache(directory="CACHE_PATH")
 cache.set("key", BytesIO(b"value"), expire=None, read=True)
 
-# Temporary container
-# _, tmp_path = tempfile.mkstemp()
-# atexit.register(os.remove, tmp_path)
-
 
 @cache.memoize(typed=True, expire=None, tag="fib")
-def product_parser(url):
+def product_parser(tmp_path, url):
     """
     Parameters:
     -----------
-    key_num: url
-        Retrieves link desde donde bajar
+    tmp_path: str or Path
+        temporary container where the file will be stored.
+    url: str
+        Retrieves link desde donde bajar.
     """
-    sh.wget("-O", f"pipeline_cumulo/data/{url[90:107]}", url)  # aca va tmp
+    sh.wget("-O", tmp_path, url)  # aca va tmp
 
 
 # ---------------------------------------
 # PROCESS
 # ---------------------------------------
 
-# for i in htmls dir
-path_html = "pipeline_cumulo/htmls/2009001.html"
-new_dir = path_html[22:-5]  # Guarda la parte de la fecha
-links_list = pipeline.url_parser(path_html)
+# input: json de cada MES
+path_json = "pipeline_cumulo/links_dir/2016_03.json"
+new_dir = path_json[-12:-5]  # Guarda la parte de la fecha
+f = open(path_json)
+links = json.load(f)
+
+# iteracion sobre los dias -> da lista de urls de cada dia
+# for day in links.keys():
+
+# iteracion sobre la lista -> da 1 url
+links_list = links["2016081"]
+for url in links_list[:1]:
+    # Extracts file name from full url
+    date = url[90:104][3:].replace(".", "")
+
+    # Generates temp file to store downloaded file
+    _, tmp_path = tempfile.mkstemp(suffix=".nc", prefix=date, dir=None, text=False)
+    atexit.register(os.remove, tmp_path)
+
+    # If file not already in cache, downloads it
+    result = cache.get(tmp_path, default=ENOVAL, retry=True)  # aca va tmp
+    if result is ENOVAL:
+        result = product_parser(tmp_path, url)
+
+    # Extracts bands as np arrays
+    # nc_file = pipeline.zip_to_nc(nc_file_name="A2016.001.0200.nc")
+    norm_bands = pipeline.processing(tmp_path)
+
+    # estos son h5 que se guarda en la memoria
+    a = pipeline.generate_tiles(norm_bands, url[90:104])
 
 
-# for i in links_list[i]:
-i = 0
-link = links_list[i]
-date = link[90:104][3:].replace(".", "")
-result = cache.get(f"pipeline_cumulo/data/", default=ENOVAL, retry=True)  # aca va tmp
-if result is ENOVAL:
-    result = product_parser(link)
-
-
-# nc_file = pipeline.zip_to_nc(nc_file_name="A2016.001.0200.nc")
-norm_bands = pipeline.processing(f"pipeline_cumulo/data/{link[90:107]}")
-
-a = pipeline.generate_tiles(
-    norm_bands, new_dir, date
-)  # -> estos son h5 que se guarda en la memoria o ftp
-
-
-# sh.rm(f"data/{js_keys[KEYN]}.zip")
-
-
+# sh.rm(f"data/{js_keys[KEYN]}.zip")im
 # cache = Cache()
 # cache.set("key", BytesIO(b"value"), expire=None, read=True)
 # juan

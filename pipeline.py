@@ -3,40 +3,9 @@
 # ---------------------
 from zipfile import ZipFile
 
-from bs4 import BeautifulSoup
 import h5py
 import netCDF4 as nc
 import numpy as np
-
-
-# Lista de links para cada dia
-def url_parser(path_to_html):
-    """Retrieves list of urls for one day.
-
-    Parameters
-    ----------
-    path_to_html: str or Path
-        The path to the parsed html file
-
-    Returns
-    -------
-    links_download: list
-        Lista de str, cada uno es el link para descargar.
-    """
-    with open(path_to_html) as file:
-        soup = BeautifulSoup(file, "html.parser")
-    # Busca todos los links en el archivo html
-    links = [link.get("href") for link in soup.find_all("a")]
-
-    # Saca los 3 primeros porque no son archivos
-    # y el primero que suele ser del amanecer
-    links_list_ok = links[3:]
-
-    # Cambia 0 por 1 para poder descargar (dl debe ser =1)
-    links_to_download = [link_ok[:-1] + "1" for link_ok in links_list_ok]
-
-    # return ((key_name, full_dir),)
-    return links_to_download
 
 
 # extracts files from zip and opens as netcdf
@@ -114,7 +83,23 @@ def processing(ds_ncfile):
     return norm_bands
 
 
-def generate_tiles(bands_matrix, directory, file_name):
+def generate_tiles(bands_matrix, file_name):
+    """Generates tiles by trimming the image in tiles of
+    size 128x128.
+
+    Parameters:
+    ----------
+    bands_matrix:
+        the bands as np arrays.
+    file_name: str
+        the file name
+
+    Returns
+    -------
+    l_tiles_list: list
+        List of tiles names.
+
+    """
     h_tiles_list = []
     pixel_list_height = np.arange(0, 1354, 128)
     conth = 0
@@ -138,12 +123,12 @@ def generate_tiles(bands_matrix, directory, file_name):
             l_tiles_list.append(lenght_tile)
 
             if contl < 10:
-                contl = f"0{contl}"
+                contl_str = f"0{contl}"
             else:
-                contl = str(contl)
+                contl_str = str(contl)
 
             with h5py.File(
-                f"pipeline_cumulo/data/{file_name}_tile{conth}{contl}.hdf5",  # acca va disco
+                f"pipeline_cumulo/data/{file_name}_tile{conth}{contl_str}.hdf5",  # acca va disco
                 "w",
             ) as f:
                 f.create_dataset("bands", data=lenght_tile)
