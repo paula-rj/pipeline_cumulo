@@ -37,7 +37,7 @@ def url_parser(path_to_html):
 
 
 url_dict = {}
-route = "pipeline_cumulo/htmls/"
+route = "pipeline_cumulo/htmls_2008/"
 html_list = sorted(os.listdir(route))
 for html_file in html_list:
     k = html_file.rsplit(".")[0]
@@ -45,5 +45,5 @@ for html_file in html_list:
     url_dict.update({k: links_list})
 
 # 1 json file per month
-with open("2016_03.json", "w") as fp:
+with open("2008_01.json", "w") as fp:
     json.dump(url_dict, fp, indent=2)
