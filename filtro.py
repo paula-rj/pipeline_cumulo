@@ -3,7 +3,10 @@
 import matplotlib.pyplot as plt
 import netCDF4 as nc
 import numpy as np
-import scipy
+
+# import scipy
+import os
+import h5py
 
 # %%%%%%%%%%%%%%%%%%%%
 # Abrimos banda visible 1
@@ -101,13 +104,3 @@ plt.plot(np.abs(fft_suma_filt))
 af = np.fft.fft(suma)
 
 plt.plot(abs(af[1:]))
-# %%
-import h5py
-
-f = h5py.File("data/A2009.001.0005_tile914.hdf5", "r")
-
-dset = f["bands"]
-
-plt.imshow(dset[:, :, 0], cmap="gray")
-
-# %%

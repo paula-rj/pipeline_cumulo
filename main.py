@@ -45,7 +45,7 @@ def product_parser(tmp_path, url):
 # ---------------------------------------
 
 # input: json de cada MES
-path_json = "pipeline_cumulo/links_dir/2016_02.json"
+path_json = "pipeline_cumulo/links_dir/2008_01.json"
 new_dir = path_json[-12:-5]  # Guarda la parte de la fecha
 f = open(path_json)
 links = json.load(f)
@@ -54,7 +54,7 @@ links = json.load(f)
 # for day in links.keys():
 
 # iteracion sobre la lista -> da 1 url
-links_list = links["2016052"]
+links_list = links["2008007"]
 for url in links_list[1:]:
     # Extracts file name from full url
     date = url[90:104][3:].replace(".", "")
