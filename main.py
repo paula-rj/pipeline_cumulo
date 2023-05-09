@@ -25,7 +25,8 @@ r"""Modulo de automatizacion para descargar, recortar, testear img de CUMULO"""
 PATH = pathlib.Path(os.path.abspath(os.path.dirname(__file__)))
 CACHE_PATH = PATH / "data/cache"
 HOME = pathlib.Path(os.path.expanduser("~"))
-PATH_FOR_HDF5 = "pipeline_cumulo/data/"
+PATH_FOR_HDF5 = pathlib.Path(os.path.abspath(os.path.dirname(__file__))) / "data"
+LINKS_DIR = pathlib.Path(os.path.abspath(os.path.dirname(__file__))) / "links_dir"
 
 # CACHE_PATH = pathlib.Path(os.path.expanduser(os.path.join("~", "cache")))
 cache = Cache(directory="CACHE_PATH")
@@ -48,7 +49,7 @@ def product_parser(tmp_path, url):
 # ------------------------------------------------------------------------------
 # PROCESS
 # ------------------------------------------------------------------------------
-links_by_month = os.listdir("pipeline_cumulo/links_dir/")
+links_by_month = os.listdir(LINKS_DIR)
 # loop sobre json de cada MES
 for path_json in links_by_month:
     new_dir = path_json[-12:-5]  # Guarda la parte de la fecha
