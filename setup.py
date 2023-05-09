@@ -2,8 +2,8 @@ import os
 
 from setuptools import setup
 
-#os.environ["__STRATOPY_IN_SETUP__"] = "True"  # noqa
-#import stratopy  # noqa
+# os.environ["__STRATOPY_IN_SETUP__"] = "True"  # noqa
+# import stratopy  # noqa
 
 
 with open("README.md", "r") as fp:
@@ -11,18 +11,11 @@ with open("README.md", "r") as fp:
 
 DESCRIPTION = LONG_DESCRIPTION.splitlines()[0].strip()
 
-REQUIREMENTS = [
-    "numpy",
-    "netCDF4",
-    "diskcache",
-    "python-dateutil",
-    "sh",
-    "h5py"
-]
+REQUIREMENTS = ["numpy", "netCDF4", "diskcache", "python-dateutil", "sh", "h5py"]
 
 setup(
     name="StratoPy",
-    #version=stratopy.__version__,
+    # version=stratopy.__version__,
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",

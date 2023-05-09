@@ -1,28 +1,17 @@
 import os
 import numpy as np
-import matplotlib.pyplot as plt
 import h5py
 
-# %%
-files = os.listdir("data/")
+
+files = os.listdir("pipeline_cumulo/data/")
 files.remove("cache")
-# %%
-i = 101
-print(files[i])
-f = h5py.File(f"data/{files[i]}", "r")
-# f = h5py.File(f"data/A2008.007.0135_tile115.hdf5", "r")
-dset = f["bands"]
-
-plt.imshow(dset[:, :, 1], cmap="gray")
-f.close()
 
 
-# %%
 def test_int(path):
     rmax = 10
     nfil0, ncol0 = 128, 128  # tamaño de la imagen
     # fila  y columna inicial de la imagen de test
-    f = h5py.File(f"data/{path}", "r")
+    f = h5py.File(f"pipeline_cumulo/data/{path}", "r")
     dset = f["bands"]
     Nband_aux = dset[:, :, 1]
     f.close()
@@ -60,24 +49,17 @@ def test_int(path):
     return test
 
 
-# %%
 test_list = []
 for i in range(len(files)):
     test_list.append(test_int(files[i]))
 
 
-# %%
-len(test_list)
-# %%
+print(len(test_list))
+
 arr = np.array(test_list)
 mal = np.argwhere(arr == 0)
-print(mal)
+
 print(len(mal))
-# %%
-for j in mal[12:]:
-    os.remove(f"data/{files[j[0]]}")
-# %%
-for j in mal:
-    print
-print(f"data/{files[mal[12]]}")
-# %%
+
+for j in mal[:]:
+    os.remove(f"pipeline_cumulo/data/{files[j[0]]}")
