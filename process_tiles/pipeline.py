@@ -83,9 +83,9 @@ def processing(ds_ncfile):
     return norm_bands
 
 
-def generate_tiles(bands_matrix, file_name):
+def generate_tiles(bands_matrix, file_name, path_to_save):
     """Generates tiles by trimming the image in tiles of
-    size 128x128.
+    size 128x128(x6).
 
     Parameters:
     ----------
@@ -93,6 +93,8 @@ def generate_tiles(bands_matrix, file_name):
         the bands as np arrays.
     file_name: str
         the file name
+    path_to_save: str or Path
+        Path where hdf5 will be stored, Without final "/".
 
     Returns
     -------
@@ -128,7 +130,7 @@ def generate_tiles(bands_matrix, file_name):
                 contl_str = str(contl)
 
             with h5py.File(
-                f"pipeline_cumulo/data/{file_name}_tile{conth}{contl_str}.hdf5",  # acca va disco
+                f"{path_to_save}/{file_name}_tile{conth}{contl_str}.hdf5",  # Va a donde se guarden
                 "w",
             ) as f:
                 f.create_dataset("bands", data=lenght_tile)
@@ -147,7 +149,7 @@ def test_int(path):
     rmax = 10
     nfil0, ncol0 = 128, 128  # tamaño de la imagen
     # fila  y columna inicial de la imagen de test
-    f = h5py.File(f"pipeline_cumulo/data/{path}", "r")
+    f = h5py.File(path, "r")
     dset = f["bands"]
     Nband_aux = dset[:, :, 1]
     f.close()
