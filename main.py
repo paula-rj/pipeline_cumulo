@@ -16,7 +16,7 @@ import numpy as np
 
 import sh
 
-from . import pipeline
+import pipeline
 
 r"""Modulo de automatizacion para descargar, recortar, testear img de CUMULO"""
 # ------------------------------------------------------------
@@ -26,7 +26,9 @@ PATH = pathlib.Path(os.path.abspath(os.path.dirname(__file__)))
 CACHE_PATH = PATH / "data/cache"
 HOME = pathlib.Path(os.path.expanduser("~"))
 PATH_FOR_HDF5 = pathlib.Path(os.path.abspath(os.path.dirname(__file__))) / "data"
-LINKS_DIR = pathlib.Path(os.path.abspath(os.path.dirname(__file__))) / "links_dir"
+LINKS_DIR = (
+    pathlib.Path(os.path.abspath(os.path.dirname(__file__))) / "links_dir"
+)
 
 # CACHE_PATH = pathlib.Path(os.path.expanduser(os.path.join("~", "cache")))
 cache = Cache(directory="CACHE_PATH")
@@ -71,7 +73,9 @@ for path_json in links_by_month:
             atexit.register(os.remove, tmp_path)
 
             # If file not already in cache, downloads it
-            result = cache.get(tmp_path, default=ENOVAL, retry=True)  # aca va tmp
+            result = cache.get(
+                tmp_path, default=ENOVAL, retry=True
+            )  # aca va tmp
             if result is ENOVAL:
                 result = product_parser(tmp_path, url)
 
@@ -80,7 +84,9 @@ for path_json in links_by_month:
             norm_bands = pipeline.processing(tmp_path)
 
             # estos son h5 que se guarda en la memoria
-            a = pipeline.generate_tiles(norm_bands, url[90:104])
+            a = pipeline.generate_tiles(
+                norm_bands, url[90:104], path_to_save=PATH_FOR_HDF5
+            )
 
         files = os.listdir(PATH_FOR_HDF5)
         files.remove("cache")
@@ -88,7 +94,7 @@ for path_json in links_by_month:
         # Tests whether tiles are ok
         test_list = []
         for i in range(len(files)):
-            test_list.append(pipeline.test_int(f"{PATH_FOR_HDF5}{files[i]}"))
+            test_list.append(pipeline.test_int(f"{PATH_FOR_HDF5}/{files[i]}"))
 
         print(len(test_list))
 
@@ -98,6 +104,6 @@ for path_json in links_by_month:
         print(len(mal))
 
         for j in mal[:]:
-            os.remove(f"{PATH_FOR_HDF5}{files[j[0]]}")
+            os.remove(f"{PATH_FOR_HDF5}/{files[j[0]]}")
 
-    f.close(path_json)
+    f.close()
