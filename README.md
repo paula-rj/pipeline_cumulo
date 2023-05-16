@@ -2,11 +2,18 @@
 
 Retrieves files from CUMULO dataset, selects 6 bands and returns tiles of size 128 x 128 x 6. Each tile is saved in HDF5 format and named following the convention:
 
- **AYYYY.ddd.HHMM_tileijj.hdf5**
-|_______________| |______|
-First part         Second part
+     AYYYY.ddd.HHMM_tileijj.hdf5
+
+    |______________||______|
+     First part      Second part
 
 The first part is the name of the file from which the tile was extracted. 
+
+- YYYY is the year. It could be 2008,2009 or 2016.
+- ddd is the day of the year. It ranges from 001 to 366.
+- HH is the hour (UTC).
+- MM the minutes (UTC).
+
 The second part is an indicator of the part of the image from where the file was extracted.
 
 - i represents the rows and is an int  number between 0 and 9.
