@@ -1,48 +1,55 @@
-# %%
+# %% Imports
 import atexit
 import json
 import os
 import tempfile
 import zipfile
-
+import sh 
 import h5py
 import matplotlib.pyplot as plt
 import numpy as np
+#%%
+import sys
+from pathlib import Path # if you haven't already done so
+file = Path(__file__).resolve()
+parent, root = file.parent, file.parents[1]
+sys.path.append(str(root))
 
-from .. import main
-from .. import pipeline
+
+import pipeline
 
 # %%Download file from 1 day
 PATH_FOR_HDF5 = "../data/"
-path_json = "links_dir/2008_01.json"
-
-new_dir = path_json[-12:-5]  # Guarda la parte de la fecha
+# Elije el json del mes
+path_json = "../links_dir/2008_01.json"
+# Guarda la parte de la fecha
+new_dir = path_json[-12:-5]  
 f = open(path_json)
 links = json.load(f)
-
 # dias -> da lista de urls de cada dia
-day = "2009001"
-# lista -> da 1 url
-links_list = links[day]
+days = list(links.keys())
+print(len(days))
+# lista de urls de cada dia 
+links_list = links[days[5]]
 url = links_list[-1]
 
 # Extracts file name from full url
 date = url[90:104][3:].replace(".", "")
-
+#%%Downloading
 # Generates temp file to store downloaded file
 _, tmp_path = tempfile.mkstemp(suffix=".nc", prefix=date, dir=None, text=False)
 atexit.register(os.remove, tmp_path)
 
 # If file not already in cache, downloads it
-result = main.product_parser(tmp_path, url)
+result = sh.wget("-O", tmp_path, url)
 
 # Extracts bands as np arrays
 # nc_file = pipeline.zip_to_nc(nc_file_name="A2016.001.0200.nc")
 norm_bands = pipeline.processing(tmp_path)
 
 # estos son h5 que se guarda en la memoria
-a = pipeline.generate_tiles(norm_bands, url[90:104], "data/")
-
+a = pipeline.generate_tiles(norm_bands, url[90:104], PATH_FOR_HDF5)
+#%%Testing
 files = os.listdir(PATH_FOR_HDF5)
 files.remove("cache")
 
@@ -59,10 +66,20 @@ mal = np.argwhere(arr == 0)
 print(len(mal))
 print(mal)
 
-# for j in mal[:]:
-#        os.remove(f"{PATH_FOR_HDF5}{files[j[0]]}")
-
 f.close()
+
+#%% Plot
+dir_to_hdf5 = f"{PATH_FOR_HDF5}/{files[1]}"
+f = h5py.File(dir_to_hdf5, "r")
+img = f["bands"][:]
+
+for i in range(6):
+    plt.imshow(a[:, :, i], cmap="gray")
+    plt.show()
+    
+# ONly one
+# plt.imshow(img[:, :, 1], cmap="gray")
+# plt.show()
 
 # %%
 # for file in zip: ... que extraiga cada archivo del zip
@@ -74,16 +91,6 @@ a = pipeline.generate_tiles(
 )  # -> estos son h5 que se guarda en la memoria o ftp
 # delate nc_file from local ?
 # plt.imshow(a[45][:,:,-3:])
-
-# %%
-f = h5py.File("../data/A2009.001.1605_tile613.hdf5", "r")
-a = f["bands"][:]
-plt.imshow(a[:, :, 1], cmap="gray")
-plt.show()
-# for i in range(6):
-#    plt.imshow(a[:, :, i], cmap="gray")
-#    plt.show()
-
 
 # %%
 print(a[:, :, 1])
