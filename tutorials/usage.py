@@ -34,10 +34,10 @@ print(len(days))
 
 # %% lista de urls de cada dia
 
-di = 25
+di = 29
 links_list = links[days[di]]
 # %%
-k = 60
+k = 80
 url = links_list[k]
 print(url)
 # Extracts file name from full url
