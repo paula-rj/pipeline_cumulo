@@ -23,7 +23,7 @@ import pipeline
 # %%Download file from 1 day
 PATH_FOR_HDF5 = "../data/"
 # Elije el json del mes
-path_json = "../links_dir/2016_01.json"
+path_json = "../links_dir/2008_01.json"
 # Guarda la parte de la fecha
 new_dir = path_json[-12:-5]
 f = open(path_json)
@@ -34,12 +34,19 @@ print(len(days))
 
 # %% lista de urls de cada dia
 
-di = 29
+di = 5
 links_list = links[days[di]]
+print(len(links_list))
 # %%
-k = 80
-url = links_list[k]
-print(url)
+# k = 70
+for k in range(95, 105, 1):
+    url = links_list[k]
+    print(url)
+    result = sh.wget("-O", f"../ncfiles/{url[90:107]}", url)
+
+# %%
+# SAVES AS NC
+# %%
 # Extracts file name from full url
 date = url[90:104][3:].replace(".", "")
 # %%Downloading
