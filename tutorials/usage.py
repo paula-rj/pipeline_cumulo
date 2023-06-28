@@ -132,5 +132,18 @@ with zipfile.ZipFile("data/sample2016001.zip", "r") as zip:
 b = hf["bands"][:]
 
 # %%
-plt.imshow(b[:, :, 5], cmap="gray")
+path = "../data/A2016.030.1235_tile308.hdf5"
+hf = h5py.File(path, "r")
+b = hf["bands"][:]
+# %%
+R = b[:, :, 0]
+V = b[:, :, 4]
+B = b[:, :, 1]
+G = 0.45 * R + 0.1 * V + 0.45 * B
+# %%
+rgb = np.stack((R, G, B), axis=2)
+rgb.shape
+# %%
+plt.imshow(rgb)
 plt.show()
+# %%
