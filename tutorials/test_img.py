@@ -1,4 +1,3 @@
-# %%
 import os
 import numpy as np
 import h5py
@@ -6,7 +5,6 @@ import matplotlib.pyplot as plt
 import shutil
 
 
-# %%
 def test_rep_x_fil(
     band_aux, row_col="col", rmin=1, rmax=10, frec_min=5, grafico=0
 ):
@@ -82,9 +80,9 @@ def test_rep_x_fil(
     else:
         test = 0
 
-    print(
-        f"Test = {test}, Desplazamiento que maximiza = {max_des}, Frecuencia maxima = {frec_max}, valor = {max_val_frec}"
-    )
+    #print(
+    #    f"Test = {test}, Desplazamiento que maximiza = {max_des}, Frecuencia maxima = {frec_max}, valor = {max_val_frec}"
+    #)
 
     # Graficos
     if grafico == 1:
@@ -118,23 +116,14 @@ def test_rep_x_fil(
     return test, frec_max
 
 
-files = os.listdir("../data/")
-files.remove("cache")
+files = os.listdir("/media/paula/DAYE 1/cumulo/")
 
 test_list = []
 for i in range(len(files)):
-    fullpath = os.path.join("../data/", files[i])
+    fullpath = os.path.join("/media/paula/DAYE 1/cumulo", files[i])
     f = h5py.File(fullpath, "r")
     band_aux = f["bands"][:][:, :, 0]
     testok, _ = test_rep_x_fil(band_aux, rmin=1, rmax=10, frec_min=5, grafico=0)
-    # if testok == 0:
-    #    copypath = os.path.join("../data/filtered", files[i])
-    #    shutil.copy(fullpath, copypath)
-
-# %%
-fullpath = os.path.join("../data/filtered", files[i])
-f = h5py.File("../data/filtered/A2009.001.1605_tile004.hdf5", "r")
-band_aux = f["bands"][:][:, :, 0]
-test_rep_x_fil(band_aux, rmin=1, rmax=10, frec_min=5, grafico=1)
-
-# %%
+    if testok == 0:
+        copypath = os.path.join("/media/paula/DAYE 1/cumulook", files[i])
+        shutil.copy(fullpath, copypath)
