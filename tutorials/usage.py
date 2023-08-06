@@ -132,18 +132,16 @@ with zipfile.ZipFile("data/sample2016001.zip", "r") as zip:
 b = hf["bands"][:]
 
 # %%
-path = "../data/A2016.030.1235_tile308.hdf5"
-hf = h5py.File(path, "r")
-b = hf["bands"][:]
-# %%
-R = b[:, :, 0]
-V = b[:, :, 4]
-B = b[:, :, 1]
-G = 0.45 * R + 0.1 * V + 0.45 * B
-# %%
-rgb = np.stack((R, G, B), axis=2)
-rgb.shape
-# %%
-plt.imshow(rgb)
-plt.show()
-# %%
+#%% TEST
+
+# files = os.listdir("/media/paula/DAYE 1/cumulo/")
+
+# test_list = []
+# for i in range(len(files)):
+#     fullpath = os.path.join("/media/paula/DAYE 1/cumulo", files[i])
+#     f = h5py.File(fullpath, "r")
+#     band_aux = f["bands"][:][:, :, 0]
+#     testok, _ = test_rep_x_fil(band_aux, rmin=1, rmax=10, frec_min=5, grafico=0)
+#     if testok == 0:
+#         copypath = os.path.join("/media/paula/DAYE 1/cumulook", files[i])
+#         shutil.copy(fullpath, copypath)
