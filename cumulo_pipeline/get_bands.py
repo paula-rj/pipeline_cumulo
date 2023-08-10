@@ -3,7 +3,7 @@
 # License: MIT (https://tldrlegal.com/license/mit-license)
 # Copyright (c) 2023, Paula Romero Jure et al.
 # All rights reserved.
-#==============================================================================
+# ==============================================================================
 import os
 
 import netCDF4 as nc

@@ -3,7 +3,7 @@
 # License: MIT (https://tldrlegal.com/license/mit-license)
 # Copyright (c) 2023, Paula Romero Jure et al.
 # All rights reserved.
-#==============================================================================
+# ==============================================================================
 # ---------------------
 # IMPORTS
 # ---------------------
@@ -164,7 +164,9 @@ def test_int(path):
     Msum_dif = np.zeros_like(sum_dif)
 
     for j in range(1, rmax):
-        dif = abs(Nband_aux[:, j : ncol0 - rmax + j] - Nband_aux[:, : ncol0 - rmax])
+        dif = abs(
+            Nband_aux[:, j : ncol0 - rmax + j] - Nband_aux[:, : ncol0 - rmax]
+        )
         sum_dif[:, j - 1] = dif.sum(axis=0)
         umbral = (sum_dif[:, j - 1].max() + 2 * sum_dif[:, j - 1].min()) / 3
         Msum_dif[sum_dif[:, j - 1] > umbral, j - 1] = 1

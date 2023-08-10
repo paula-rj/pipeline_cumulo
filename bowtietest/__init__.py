@@ -4,25 +4,27 @@
 # Copyright (c) 2023, Paula Romero Jure et al.
 # All rights reserved.
 # ==============================================================================
-# =============================================================================
+
+# ==============================================================================
 # META
-# =============================================================================
+# ==============================================================================
 
-r"""Pipeline CUMULO.
+r"""Bowtie effect Test.
 
-Download files from CUMULO (Dropbox).
+A functio designed to detect the bowtie effect and stripping pattern in MODIS 
+images.
 
-Module main has the whole process integrated.
 """
 
-__name__ = "pipeline_cumulo"
-__version__ = "0.0.1"
-
+__name__ = "bowtietest"
+__version__ = "0.1.0"
 
 # =============================================================================
 # IMPORTS
 # =============================================================================
+import os
 
-from .pipeline import *  # noqa
-from .main import *  # noqa
-from .dict_gen import *  # noqa
+if os.getenv("__BOWTIE_IN_SETUP__") != "True":  # noqa
+    from test_img import test_img_col  # noqa
+
+del os

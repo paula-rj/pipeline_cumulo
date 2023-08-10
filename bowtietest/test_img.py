@@ -3,7 +3,7 @@
 # License: MIT (https://tldrlegal.com/license/mit-license)
 # Copyright (c) 2023, Paula Romero Jure et al.
 # All rights reserved.
-#==============================================================================
+# ==============================================================================
 # -----------------------------------------------------------------------------
 # Imports
 # -----------------------------------------------------------------------------
@@ -14,47 +14,48 @@ import matplotlib.pyplot as plt
 # Function
 # -----------------------------------------------------------------------------
 
-def test_rep_x_col(
+
+def test_image_col(
     band, scan_by="col", rmin=1, rmax=10, frec_min=5, factor=2, graph=1
 ):
     """
         This test tries to identify in images if there is pixel repetitions (by columns).
         To a tile of an image, desplacemnts.
-        
-        A tile of an image is shifted successively between rmin and rmax (in columns) and 
-        subtracted from the original to emphasise repetitions (black stripes). 
-        A sum is performed on a coordinate (row) and 
+
+        A tile of an image is shifted successively between rmin and rmax (in columns) and
+        subtracted from the original to emphasise repetitions (black stripes).
+        A sum is performed on a coordinate (row) and
         a Fourier transform is performed on this sequence.
-        
-        If there is a frequency that stands out notably over the others 
+
+        If there is a frequency that stands out notably over the others
         (exceeding a threshold) it is concluded that there is a repetition.
-        
+
 
     Parameters
     ----------
         band: ndarray
             2D array normalized to [0,1]
         scan_by: str
-            scan direction to look for repetitions 
+            scan direction to look for repetitions
             Values are 'col' or 'row'
-        rmin: int 
+        rmin: int
             minimum shift value (>= 0)
         rmax: int
             maximum shift value (>= 1)
-        frec_min: int 
-            minimum frequency from which the one with 
+        frec_min: int
+            minimum frequency from which the one with
             major spectral component is calculated (>= 1)
         factor: float
             the factor of std deviations to calulate the threshold  (>=0)
         graph: int
             if 1, plots the test, if 0 does not plot
-            
+
     Returns
     -------
         test: int
-            0 means no errors, 1 means image with repetitions, 
-            2 means nearly uniform image 
-            
+            0 means no errors, 1 means image with repetitions,
+            2 means nearly uniform image
+
     """
     # Validation of the input data
     if (
@@ -66,18 +67,24 @@ def test_rep_x_col(
         or type(factor) != int
         or type(graph) != str
     ):
-        raise TypeError(f"Verify data type {type(band)}, {type(scan_by)}, \
+        raise TypeError(
+            f"Verify data type {type(band)}, {type(scan_by)}, \
             {type(rmin)}, {type(rmax)}, {type(factor)}, {type(frec_min)}, \
-            {type(graph)}")
+            {type(graph)}"
+        )
         return
 
     dim = band.shape
     if np.min(dim) < 50 + 2 * rmax or np.max(dim) > 300 + 2 * rmax:
-        raise ValueError(f"Image dimensions out of range {np.min(dim)}, {50 + 2 * rmax}, {np.max(dim)}, {300 + 2 * rmax}")
+        raise ValueError(
+            f"Image dimensions out of range {np.min(dim)}, {50 + 2 * rmax}, {np.max(dim)}, {300 + 2 * rmax}"
+        )
         return
 
     if band.min() < 0 or band.max() > 1:
-        raise ValueError(f"Image is not normalized min(img) = {band.min()}, max(img) = {band.max()}")
+        raise ValueError(
+            f"Image is not normalized min(img) = {band.min()}, max(img) = {band.max()}"
+        )
         return
 
     if (
@@ -103,10 +110,10 @@ def test_rep_x_col(
     Msum_dif = np.ones_like(sum_dif)
 
     # Calculates the differences between the original image and the one
-    # displaced by columns 
+    # displaced by columns
     # Sums the differences by row
 
-    for j in range(rmin, rmax):  
+    for j in range(rmin, rmax):
         dif = abs(
             band_aux[j : ncol0 - rmax + j, :] - band_aux[: ncol0 - rmax, :]
         )

@@ -2,8 +2,8 @@ import os
 
 from setuptools import setup
 
-#os.environ["__BOWTIETEST_IN_SETUP__"] = "True"  # noqa
-#import bowtietest  # noqa
+os.environ["__BOWTIE_IN_SETUP__"] = "True"  # noqa
+import bowtietest  # noqa
 
 
 with open("README.md", "r") as fp:
