@@ -7,8 +7,9 @@
 # -----------------------------------------------------------------------------
 # Imports
 # -----------------------------------------------------------------------------
-import numpy as np
 import matplotlib.pyplot as plt
+
+import numpy as np
 
 # -----------------------------------------------------------------------------
 # Function
@@ -19,17 +20,17 @@ def test_image_col(
     band, scan_by="col", rmin=1, rmax=10, frec_min=5, factor=2, graph=1
 ):
     """
-        This test tries to identify in images if there is pixel repetitions (by columns).
-        To a tile of an image, desplacemnts.
+        This test tries to identify in images if there is pixel repetitions
+        (by columns). To a tile of an image, desplacemnts.
 
-        A tile of an image is shifted successively between rmin and rmax (in columns) and
-        subtracted from the original to emphasise repetitions (black stripes).
-        A sum is performed on a coordinate (row) and
-        a Fourier transform is performed on this sequence.
+        A tile of an image is successively shifted between rmin and rmax
+        (in columns) and subtracted from the original to emphasise repetitions
+        (black stripes).
+        A sum is performed on a coordinate (row) and a Fourier transform
+        is performed on this sequence.
 
         If there is a frequency that stands out notably over the others
         (exceeding a threshold) it is concluded that there is a repetition.
-
 
     Parameters
     ----------
@@ -77,13 +78,13 @@ def test_image_col(
     dim = band.shape
     if np.min(dim) < 50 + 2 * rmax or np.max(dim) > 300 + 2 * rmax:
         raise ValueError(
-            f"Image dimensions out of range {np.min(dim)}, {50 + 2 * rmax}, {np.max(dim)}, {300 + 2 * rmax}"
+            f"Image dimensions out of range {np.min(dim)}, {50 + 2 * rmax}, {np.max(dim)}, {300 + 2 * rmax}" # noqa
         )
         return
 
     if band.min() < 0 or band.max() > 1:
         raise ValueError(
-            f"Image is not normalized min(img) = {band.min()}, max(img) = {band.max()}"
+            f"Image is not normalized min(img) = {band.min()}, max(img) = {band.max()}" # noqa
         )
         return
 
@@ -131,7 +132,7 @@ def test_image_col(
     frec_max = 0
     for j in range(rmin, rmax):
         FMsum_dif[:, j - rmin] = np.fft.fft(Msum_dif[:, j - rmin])  # Fourier
-        if abs(FMsum_dif[frec_min : ncol0 // 2, j - rmin]).max() > max_val_frec:
+        if abs(FMsum_dif[frec_min : ncol0 // 2, j - rmin]).max() > max_val_frec: # noqa
             frec_max = (
                 np.argmax(abs(FMsum_dif[frec_min : ncol0 // 2, j - rmin]))
                 + frec_min
@@ -150,7 +151,7 @@ def test_image_col(
         test = 0
 
     print(
-        f"Test = {test}, Desplazamiento que maximiza = {max_des}, Frecuencia maxima = {frec_max}, valor = {max_val_frec}"
+        f"Test = {test}, Desplazamiento que maximiza = {max_des}, Frecuencia maxima = {frec_max}, valor = {max_val_frec}" # noqa
     )
 
     # Plots
@@ -170,7 +171,7 @@ def test_image_col(
 
         plt.subplot(122)
         plt.imshow(
-            abs(band_aux[j : ncol0 - rmax + j, :] - band_aux[: ncol0 - rmax, :]),
+            abs(band_aux[j : ncol0 - rmax + j, :] - band_aux[: ncol0 - rmax, :]), # noqa
             cmap="gray",
         )
         plt.title("Diferential image")

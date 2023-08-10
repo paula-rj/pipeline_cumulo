@@ -9,20 +9,21 @@
 # --------------------
 
 import atexit
-from io import BytesIO
 import json
 import os
 import pathlib
 import tempfile
+from io import BytesIO
 
 from diskcache import Cache
 from diskcache.core import ENOVAL
 
 import numpy as np
 
+import pipeline
+
 import sh
 
-import pipeline
 
 r"""Modulo de automatizacion para descargar, recortar, testear img de CUMULO"""
 # ------------------------------------------------------------
@@ -31,7 +32,7 @@ r"""Modulo de automatizacion para descargar, recortar, testear img de CUMULO"""
 PATH = pathlib.Path(os.path.abspath(os.path.dirname(__file__)))
 CACHE_PATH = PATH / "data/cache"
 HOME = pathlib.Path(os.path.expanduser("~"))
-PATH_FOR_HDF5 = pathlib.Path(os.path.abspath(os.path.dirname(__file__))) / "data"
+PATH_FOR_HDF5 = pathlib.Path(os.path.abspath(os.path.dirname(__file__))) / "data" # noqa
 LINKS_DIR = (
     pathlib.Path(os.path.abspath(os.path.dirname(__file__))) / "links_dir"
 )

@@ -10,7 +10,9 @@
 from zipfile import ZipFile
 
 import h5py
+
 import netCDF4 as nc
+
 import numpy as np
 
 
@@ -136,7 +138,8 @@ def generate_tiles(bands_matrix, file_name, path_to_save):
                 contl_str = str(contl)
 
             with h5py.File(
-                f"{path_to_save}/{file_name}_tile{conth}{contl_str}.hdf5",  # Va a donde se guarden
+                # Va a donde se guarden
+                f"{path_to_save}/{file_name}_tile{conth}{contl_str}.hdf5",
                 "w",
             ) as f:
                 f.create_dataset("bands", data=lenght_tile)
@@ -153,7 +156,7 @@ def test_int(path):
     path: str or Path
         Path to tile (hdf5 img)."""
     rmax = 10
-    nfil0, ncol0 = 128, 128  # tamaño de la imagen
+    ncol0 = 128  # tamaño de la imagen
     # fila  y columna inicial de la imagen de test
     f = h5py.File(path, "r")
     dset = f["bands"]

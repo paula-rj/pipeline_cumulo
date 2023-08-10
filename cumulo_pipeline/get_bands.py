@@ -6,11 +6,11 @@
 # ==============================================================================
 import os
 
+import h5py
+
 import netCDF4 as nc
 
 import numpy as np
-
-import h5py
 
 
 def study_file(store_dir_nc, path_to_save):

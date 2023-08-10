@@ -11,7 +11,7 @@
 
 r"""Bowtie effect Test.
 
-A functio designed to detect the bowtie effect and stripping pattern in MODIS 
+A functio designed to detect the bowtie effect and stripping pattern in MODIS
 images.
 
 """
