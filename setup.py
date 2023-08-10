@@ -2,8 +2,8 @@ import os
 
 from setuptools import setup
 
-# os.environ["__STRATOPY_IN_SETUP__"] = "True"  # noqa
-# import stratopy  # noqa
+#os.environ["__BOWTIETEST_IN_SETUP__"] = "True"  # noqa
+#import bowtietest  # noqa
 
 
 with open("README.md", "r") as fp:
@@ -11,7 +11,18 @@ with open("README.md", "r") as fp:
 
 DESCRIPTION = LONG_DESCRIPTION.splitlines()[0].strip()
 
-REQUIREMENTS = ["numpy", "netCDF4", "diskcache", "python-dateutil", "sh", "h5py"]
+REQUIREMENTS = [
+    "bs4",
+    "diskcache",
+    "json",
+    "matplotlib",
+    "netCDF4",
+    "numpy",
+    "pyhdf" "python-dateutil",
+    "sh",
+    "h5py",
+    "os",
+]
 
 setup(
     name="StratoPy",
@@ -20,14 +31,14 @@ setup(
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     install_requires=REQUIREMENTS,
-    author="Paula Romero",
-    author_email="paula.romero@mi.unc.edu.ar",
+    author="Paula Romero, Sergio Masuelli",
+    author_email="paula.romero@mi.unc.edu.ar, smasuelli@unc.edu.ar",
     url="https://github.com/paula-rj/",
     py_modules=None,
-    packages=[""],
+    packages=["bowtietest", "cumulo_pipeline"],
     include_package_data=True,
     license="The MIT License",
-    keywords=["cumulo", "clouds"],
+    keywords=["cumulo", "clouds", "bowtie effect", "stripping", "MODIS"],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Education",
