@@ -14,14 +14,15 @@ DESCRIPTION = LONG_DESCRIPTION.splitlines()[0].strip()
 REQUIREMENTS = [
     "bs4",
     "diskcache",
-    "json",
+    "h5py",
     "matplotlib",
     "netCDF4",
     "numpy",
-    "pyhdf" "python-dateutil",
-    "sh",
-    "h5py",
+    "pyhdf",
+    "python-dateutil",
     "os",
+    "sh",
+    "json",
 ]
 
 setup(
