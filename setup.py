@@ -20,9 +20,7 @@ REQUIREMENTS = [
     "numpy",
     "pyhdf",
     "python-dateutil",
-    "os",
     "sh",
-    "json",
 ]
 
 setup(
