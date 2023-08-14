@@ -1,5 +1,14 @@
 # Pipeline CUMULO*
 
+
+![Python: 3.9+](https://img.shields.io/badge/python-3.9%2B-blue)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) 
+
+
+Python package designed to retrieve files from CUMULO* dataset and to detect bowtie effect and stripping in images form MODIS and other similar sensors. 
+
+# About CUMULO pipeline
+
 Retrieves files from CUMULO dataset, selects 6 bands and returns tiles of size 128 x 128 x 6. Each tile is saved in HDF5 format and named following the convention:
 
      AYYYY.ddd.HHMM_tileijj.hdf5
