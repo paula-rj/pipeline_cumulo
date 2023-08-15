@@ -24,7 +24,7 @@ REQUIREMENTS = [
 ]
 
 setup(
-    name="StratoPy",
+    name="Pipeline_cumulo",
     # version=stratopy.__version__,
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,

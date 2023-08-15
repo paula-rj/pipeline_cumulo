@@ -25,6 +25,6 @@ __version__ = "0.1.0"
 import os
 
 if os.getenv("__BOWTIE_IN_SETUP__") != "True":  # noqa
-    from test_img import test_img_col  # noqa
+    from bowtietest import test_img_col  # noqa
 
 del os
