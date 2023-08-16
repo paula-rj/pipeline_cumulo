@@ -23,6 +23,3 @@ __version__ = "0.0.1"
 # IMPORTS
 # =============================================================================
 
-from .pipeline import *  # noqa
-from .main import *  # noqa
-from .dict_gen import *  # noqa

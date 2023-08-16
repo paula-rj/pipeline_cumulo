@@ -91,14 +91,16 @@ def processing(ds_ncfile):
     return norm_bands
 
 
-def generate_tiles(bands_matrix, file_name, path_to_save):
+def generate_tiles(bands_matrix, tileshape, file_name, path_to_save):
     """Generates tiles by trimming the image in tiles of
     size 128x128(x6).
 
-    Parameters:
+    Parameters
     ----------
-    bands_matrix:
+    bands_matrix: ndarray
         the bands as np arrays.
+    tileshape: int
+        Shape of tiles. Tiles are squared. 
     file_name: str
         the file name
     path_to_save: str or Path
@@ -111,7 +113,8 @@ def generate_tiles(bands_matrix, file_name, path_to_save):
 
     """
     h_tiles_list = []
-    pixel_list_height = np.arange(0, 1354, 128)
+    nrows, ncols = bands_matrix.shape
+    pixel_list_height = np.arange(0, nrows, tileshape)
     conth = 0
     while conth + 1 < len(pixel_list_height):
         height_tile = bands_matrix[
@@ -121,7 +124,7 @@ def generate_tiles(bands_matrix, file_name, path_to_save):
         h_tiles_list.append(height_tile)
 
     l_tiles_list = []
-    pixel_list_lenght = np.arange(0, 2030, 128)
+    pixel_list_lenght = np.arange(0, ncols, tileshape)
     conth = 0
     for height_tile in h_tiles_list:
         contl = 0

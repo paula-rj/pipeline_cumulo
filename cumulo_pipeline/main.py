@@ -92,7 +92,7 @@ for path_json in links_by_month:
 
             # estos son h5 que se guarda en la memoria
             a = pipeline.generate_tiles(
-                norm_bands, url[90:104], path_to_save=PATH_FOR_HDF5
+                norm_bands, 128, url[90:104], path_to_save=PATH_FOR_HDF5
             )
 
         files = os.listdir(PATH_FOR_HDF5)

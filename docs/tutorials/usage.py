@@ -16,20 +16,20 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # %%
-import sys
-from pathlib import Path  # if you haven't already done so
+# import sys
+# from pathlib import Path  # if you haven't already done so
 
-file = Path(__file__).resolve()
-parent, root = file.parent, file.parents[1]
-sys.path.append(str(root))
+# file = Path(__file__).resolve()
+# parent, root = file.parent, file.parents[1]
+# sys.path.append(str(root))
 
 
-import pipeline
+from ...cumulo_pipeline.pipeline import generate_tiles
 
 # %%Download file from 1 day
-PATH_FOR_HDF5 = "../data/"
+
 # Elije el json del mes
-path_json = "../links_dir/2008_01.json"
+path_json = "../../links_dir/2008_01.json"
 # Guarda la parte de la fecha
 new_dir = path_json[-12:-5]
 f = open(path_json)
@@ -48,7 +48,7 @@ print(len(links_list))
 for k in range(95, 105, 1):
     url = links_list[k]
     print(url)
-    result = sh.wget("-O", f"../ncfiles/{url[90:107]}", url)
+    result = sh.wget("-O", f"../../ncfiles/{url[90:107]}", url)
 
 # %%
 # SAVES AS NC
@@ -65,7 +65,7 @@ result = sh.wget("-O", tmp_path, url)
 
 # Extracts bands as np arrays
 # nc_file = pipeline.zip_to_nc(nc_file_name="A2016.001.0200.nc")
-norm_bands = pipeline.processing(tmp_path)
+norm_bands = cumulo_pipe pipeline.processing(tmp_path)
 
 # estos son h5 que se guarda en la memoria
 a = pipeline.generate_tiles(norm_bands, url[90:104], PATH_FOR_HDF5)
