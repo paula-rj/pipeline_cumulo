@@ -60,18 +60,22 @@ def test_image_col(
     """
     # Validation of the input data
     if (
-        str(type(band)) != "<class 'numpy.ndarray'>"
-        or type(scan_by) != str
-        or type(rmin) != int
-        or type(rmax) != int
-        or type(frec_min) != int
-        or type(factor) != int
-        or type(graph) != str
+        not isinstance(band, np.ndarray)
+        or not isinstance(scan_by, str)
+        or not isinstance(rmin, int)
+        or not isinstance(rmax, int)
+        or not isinstance(frec_min, int)
+        or not isinstance(factor, int)
+        or not isinstance(graph, int)
     ):
         raise TypeError(
-            f"Verify data type {type(band)}, {type(scan_by)}, \
-            {type(rmin)}, {type(rmax)}, {type(factor)}, {type(frec_min)}, \
-            {type(graph)}"
+            f"Verify data type {type(band)}, \
+                            {type(scan_by)}, \
+                            {type(rmin)}, \
+                            {type(rmax)}, \
+                            {type(factor)}, \
+                            {type(frec_min)}, \
+                            {type(graph)}"
         )
         return
 
@@ -120,8 +124,8 @@ def test_image_col(
         )
         sum_dif[:, j - rmin] = dif.sum(axis=1)  # ke
 
-    umbral0 = sum_dif.mean() - sum_dif.std()
-    Msum_dif[sum_dif < umbral0] = 0
+    threshold0 = sum_dif.mean() - sum_dif.std()
+    Msum_dif[sum_dif < threshold0] = 0
     Msum_dif = np.copy(sum_dif)
 
     # Looking for repetition frequencies through FFT
@@ -142,8 +146,8 @@ def test_image_col(
 
     # Result
     val = np.copy(abs(FMsum_dif[frec_min:, max_des - rmin]))
-    umbral = val.mean() + factor * val.std()
-    if (val - umbral).max() > 0 and frec_max > frec_min:
+    threshold = val.mean() + factor * val.std()
+    if (val - threshold).max() > 0 and frec_max > frec_min:
         test = 1
     elif max_val_frec == 0:
         test = 2
@@ -151,7 +155,7 @@ def test_image_col(
         test = 0
 
     print(
-        f"Test = {test}, Desplazamiento que maximiza = {max_des}, Frecuencia maxima = {frec_max}, valor = {max_val_frec}" # noqa
+        f"Test = {test}, Desplazamiento que maximiza = {max_des}, Max frequency = {frec_max}, value = {max_val_frec}" # noqa
     )
 
     # Plots

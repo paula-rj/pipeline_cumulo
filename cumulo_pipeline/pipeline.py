@@ -100,7 +100,7 @@ def generate_tiles(bands_matrix, tileshape, file_name, path_to_save):
     bands_matrix: ndarray
         the bands as np arrays.
     tileshape: int
-        Shape of tiles. Tiles are squared. 
+        Shape of tiles. Tiles are squared.
     file_name: str
         the file name
     path_to_save: str or Path
