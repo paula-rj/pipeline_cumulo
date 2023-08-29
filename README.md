@@ -55,3 +55,12 @@ The second part is an indicator of the part of the image from where the file was
 
 
 *Zantedeschi, V., Falasca, F., Douglas, A., Strange, R., & Kusner, M. J. (2019). Cumulo: A Dataset for Learning Cloud Classes. ArXiv. [/abs/1911.04227](https://arxiv.org/abs/1911.04227)
+
+# About Bowtie test
+
+## How to cite
+@misc{BOWTIE2023,
+  title={A test for systematic detection and filtering of satellite images with bowtie effect and stripping},
+  author={Romero Jure, P, and Masuelli, S. and Cabral, J.B.},
+  year={2023},
+}
